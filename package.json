@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "A minimal macOS desktop cat pet built with Electron, React, TypeScript, and Vite.",
+  "license": "MIT",
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "concurrently -k -s first \"npm:dev:renderer\" \"npm:dev:electron\"",
