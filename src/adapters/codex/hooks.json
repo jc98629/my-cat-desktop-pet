@@ -1,0 +1,52 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/local/bin/node \"/absolute/path/to/my-cat-desktop-pet/src/adapters/codex/codex-state-hook.cjs\"",
+            "async": true,
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/local/bin/node \"/absolute/path/to/my-cat-desktop-pet/src/adapters/codex/codex-state-hook.cjs\"",
+            "async": true,
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/local/bin/node \"/absolute/path/to/my-cat-desktop-pet/src/adapters/codex/codex-state-hook.cjs\"",
+            "async": true,
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/local/bin/node \"/absolute/path/to/my-cat-desktop-pet/src/adapters/codex/codex-state-hook.cjs\"",
+            "async": true,
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

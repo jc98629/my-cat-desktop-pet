@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <defs>
+    <mask id="cat-face-cutouts">
+      <rect width="36" height="36" fill="white"/>
+      <ellipse cx="12.7" cy="20.2" rx="4.6" ry="5.2" fill="black" transform="rotate(-18 12.7 20.2)"/>
+      <ellipse cx="23.3" cy="20.2" rx="4.6" ry="5.2" fill="black" transform="rotate(18 23.3 20.2)"/>
+      <path d="M15.7 26.2 18 28.1l2.3-1.9" fill="none" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+    </mask>
+  </defs>
+  <path
+    d="M5.3 14.2 3.9 3.6l9.2 6.1A15.2 15.2 0 0 1 18 8.9c1.7 0 3.4.3 4.9.8l9.2-6.1-1.4 10.6A14.4 14.4 0 0 1 32.4 21c0 7.5-6.4 12.1-14.4 12.1S3.6 28.5 3.6 21c0-2.5.6-4.8 1.7-6.8Z"
+    fill="black"
+    mask="url(#cat-face-cutouts)"
+  />
+  <circle cx="13.2" cy="20.2" r="1.35" fill="black"/>
+  <circle cx="22.8" cy="20.2" r="1.35" fill="black"/>
+  <path d="m16.6 24.8 1.4 1.1 1.4-1.1L18 23.9Z" fill="black"/>
+</svg>

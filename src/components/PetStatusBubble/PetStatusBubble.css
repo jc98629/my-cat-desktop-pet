@@ -1,0 +1,160 @@
+.pet-status-bubble {
+  position: relative;
+  display: grid;
+  width: 184px;
+  min-height: 54px;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 17px;
+  color: #263142;
+  background: rgba(250, 250, 252, 0.9);
+  box-shadow:
+    0 10px 24px rgba(45, 53, 68, 0.16),
+    0 2px 7px rgba(45, 53, 68, 0.08),
+    inset 0 0 0 0.5px rgba(93, 104, 122, 0.15);
+  font: inherit;
+  text-align: left;
+  -webkit-backdrop-filter: blur(18px) saturate(1.12);
+  backdrop-filter: blur(18px) saturate(1.12);
+}
+
+.pet-status-bubble::after {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border-right: 1px solid rgba(255, 255, 255, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(250, 250, 252, 0.92);
+  content: '';
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.pet-status-bubble--waiting {
+  cursor: pointer;
+  appearance: none;
+  animation: pet-bubble-enter 190ms ease-out both;
+}
+
+.pet-status-bubble--waiting[role='status'] {
+  cursor: default;
+}
+
+button.pet-status-bubble--waiting:hover {
+  background: rgba(255, 252, 249, 0.96);
+  box-shadow:
+    0 11px 26px rgba(45, 53, 68, 0.18),
+    0 2px 7px rgba(45, 53, 68, 0.1),
+    inset 0 0 0 0.5px rgba(255, 145, 54, 0.2);
+}
+
+button.pet-status-bubble--waiting:active {
+  transform: translateY(1px) scale(0.992);
+}
+
+button.pet-status-bubble--waiting:focus-visible {
+  outline: 2px solid rgba(55, 126, 247, 0.78);
+  outline-offset: 2px;
+}
+
+.pet-status-bubble--done {
+  grid-template-columns: 26px minmax(0, 1fr);
+  animation: pet-done-bubble-lifecycle 6s ease both;
+}
+
+.pet-status-bubble__indicator {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.pet-status-bubble--waiting .pet-status-bubble__indicator {
+  background: #ff963f;
+  box-shadow: 0 0 0 5px rgba(255, 150, 63, 0.12);
+}
+
+.pet-status-bubble--done .pet-status-bubble__indicator {
+  background: #45b879;
+  box-shadow: 0 0 0 5px rgba(69, 184, 121, 0.13);
+}
+
+.pet-status-bubble__copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  line-height: 1.12;
+}
+
+.pet-status-bubble__copy strong {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pet-status-bubble__copy span {
+  overflow: hidden;
+  color: #5c6879;
+  font-size: 11px;
+  font-weight: 540;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pet-status-bubble__action {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  color: #e8701b;
+  font-size: 10px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+@keyframes pet-bubble-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pet-done-bubble-lifecycle {
+  0% {
+    opacity: 0;
+    transform: translateY(3px) scale(0.985);
+  }
+  3.5%,
+  88% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-2px) scale(0.992);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-status-bubble {
+    animation: none !important;
+  }
+}

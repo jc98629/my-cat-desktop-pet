@@ -1,0 +1,8 @@
+{
+  "name": "my-cat-deepseek-state-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "exports": "./index.mjs"
+}

@@ -1,0 +1,279 @@
+.cat-pet {
+  --idle-follow-x: 0px;
+  --idle-follow-rotate: 0deg;
+  --idle-nuzzle-x: 0px;
+  --idle-nuzzle-rotate: 0deg;
+  position: relative;
+  width: 188px;
+  height: 188px;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  transform-origin: 50% 90%;
+  transition: filter 180ms ease, transform 180ms ease;
+}
+
+.cat-pet:hover {
+  filter: drop-shadow(0 8px 12px rgba(107, 67, 41, 0.28));
+  transform: translateY(-3px) scale(1.025);
+}
+
+.cat-pet.has-status-bubble:hover {
+  transform: none;
+}
+
+.cat-pet.is-pressed {
+  cursor: grabbing;
+  transform: translateY(1px) scale(0.98);
+}
+
+.cat-pet.has-status-bubble.is-pressed {
+  transform: translateY(1px) scale(0.98);
+}
+
+.cat-pet__bubble-anchor {
+  position: absolute;
+  z-index: 10;
+  top: -43px;
+  left: 50%;
+  display: block;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+
+.cat-pet__motion-layer,
+.cat-pet__action-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: 50% 90%;
+}
+
+.cat-pet__motion-layer {
+  z-index: 1;
+  transform:
+    translate3d(var(--idle-follow-x), 0, 0)
+    rotate(var(--idle-follow-rotate))
+    scale(1);
+  transition: transform 220ms ease-out;
+  will-change: transform;
+}
+
+.cat-pet__motion-layer.is-nuzzling {
+  transform:
+    translate3d(calc(var(--idle-follow-x) + var(--idle-nuzzle-x)), -2px, 0)
+    rotate(calc(var(--idle-follow-rotate) + var(--idle-nuzzle-rotate)))
+    scale(1.01);
+  transition-duration: 180ms;
+}
+
+.cat-pet__action-layer {
+  will-change: transform;
+}
+
+.cat-pet__image-frame {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+.cat-pet__head-hitbox {
+  position: absolute;
+  z-index: 6;
+  top: 36%;
+  left: 6%;
+  width: 54%;
+  height: 42%;
+  border-radius: 48% 52% 46% 48%;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.cat-pet__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  will-change: opacity;
+  -webkit-user-drag: none;
+}
+
+.cat-pet__image--active {
+  animation: cat-image-fade-in 200ms ease-in-out both;
+}
+
+.cat-pet__image--outgoing {
+  animation: cat-image-fade-out 200ms ease-in-out both;
+}
+
+/*
+ * 用户提供的是 1536 × 1024 的完整素材板。这里不裁改原图，只在窗口中定位
+ * 左侧主猫区域；未来换成拆分后的单张图片时，普通 contain 规则会自动生效。
+ */
+.cat-pet__image-frame--material-sheet {
+  overflow: hidden;
+}
+
+.cat-pet__image-frame--material-sheet .cat-pet__image {
+  position: absolute;
+  top: -27px;
+  left: -15px;
+  width: 507px;
+  height: auto;
+  max-width: none;
+  object-fit: initial;
+}
+
+.cat-pet__shadow {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  width: 104px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(46, 30, 21, 0.18);
+  filter: blur(7px);
+  transform: translateX(-50%);
+}
+
+.animation-idle .cat-pet__image-frame {
+  animation: cat-idle-breathe 3.6s ease-in-out infinite;
+}
+
+.animation-working .cat-pet__image-frame {
+  animation: cat-working-breathe 4.6s ease-in-out infinite;
+}
+
+.animation-waiting .cat-pet__image-frame {
+  animation: cat-waiting-lift 2.8s ease-in-out infinite;
+}
+
+.animation-done .cat-pet__image-frame {
+  animation: cat-done-pop 620ms cubic-bezier(0.22, 0.78, 0.32, 1) 1 both;
+}
+
+.animation-error .cat-pet__image-frame {
+  animation: cat-error-shake 500ms ease-in-out 1 both;
+}
+
+.cat-pet__action-layer.idle-action--tilt-left {
+  animation: cat-idle-tilt-left 440ms ease-in-out 1 both;
+}
+
+.cat-pet__action-layer.idle-action--tilt-right {
+  animation: cat-idle-tilt-right 440ms ease-in-out 1 both;
+}
+
+.cat-pet__action-layer.idle-action--hop {
+  animation: cat-idle-hop 480ms cubic-bezier(0.22, 0.72, 0.3, 1) 1 both;
+}
+
+.cat-pet__action-layer.idle-action--sway {
+  animation: cat-idle-sway 520ms ease-in-out 1 both;
+}
+
+.cat-pet__action-layer.is-waiting-reminder {
+  animation: cat-waiting-reminder 520ms ease-in-out 1 both;
+}
+
+@keyframes cat-image-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cat-image-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes cat-idle-breathe {
+  0%,
+  100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1.5px) scale(1.012); }
+}
+
+@keyframes cat-working-breathe {
+  0%,
+  100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+
+@keyframes cat-waiting-lift {
+  0%,
+  65%,
+  100% { transform: translateY(0) rotate(0); }
+  76% { transform: translateY(-3px) rotate(-0.8deg); }
+  87% { transform: translateY(0) rotate(0.5deg); }
+  94% { transform: translateY(-0.5px) rotate(0); }
+}
+
+@keyframes cat-done-pop {
+  0% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-7px) scale(1.04); }
+  76% { transform: translateY(-2px) scale(1.015); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes cat-error-shake {
+  0%,
+  100% { transform: translateX(0); }
+  22% { transform: translateX(-3px); }
+  44% { transform: translateX(3px); }
+  66% { transform: translateX(-2px); }
+  82% { transform: translateX(2px); }
+}
+
+@keyframes cat-idle-tilt-left {
+  0%,
+  100% { transform: rotate(0); }
+  45% { transform: translateY(-1px) rotate(-4.5deg) scale(1.015); }
+}
+
+@keyframes cat-idle-tilt-right {
+  0%,
+  100% { transform: rotate(0); }
+  45% { transform: translateY(-1px) rotate(4.5deg) scale(1.015); }
+}
+
+@keyframes cat-idle-hop {
+  0%,
+  100% { transform: translateY(0); }
+  38% { transform: translateY(-7px) scale(1.025); }
+  68% { transform: translateY(-2px) scale(1.01); }
+}
+
+@keyframes cat-idle-sway {
+  0%,
+  100% { transform: translateX(0); }
+  28% { transform: translateX(-5px) rotate(-1.2deg); }
+  66% { transform: translateX(5px) rotate(1.2deg); }
+}
+
+@keyframes cat-waiting-reminder {
+  0%,
+  100% { transform: translateY(0) rotate(0); }
+  30% { transform: translateY(-3px) rotate(-1deg); }
+  62% { transform: translateY(-1px) rotate(1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-pet,
+  .cat-pet__motion-layer,
+  .cat-pet__action-layer,
+  .cat-pet__image-frame {
+    animation: none !important;
+    transition: none;
+  }
+}
