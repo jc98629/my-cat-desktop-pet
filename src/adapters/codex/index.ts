@@ -1,2 +1,6 @@
 export { subscribeToCodexPetState, type CodexPetStateUpdate } from './codexStateAdapter';
-export type { CodexAutomaticState, CodexStateSnapshot } from './types';
+export type {
+  CodexAutomaticState,
+  CodexDoneResumeState,
+  CodexStateSnapshot,
+} from './types';

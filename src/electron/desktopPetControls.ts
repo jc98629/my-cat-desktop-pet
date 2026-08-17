@@ -68,7 +68,7 @@ export function createDesktopPetControls(
 
     const petVisible = options.isPetVisible();
     const contextMenu = Menu.buildFromTemplate([
-      { label: 'My Cat Pet', enabled: false },
+      { label: 'QiuQiu', enabled: false },
       {
         label:
           currentState === 'WAITING'
@@ -113,12 +113,12 @@ export function createDesktopPetControls(
       },
       { type: 'separator' },
       {
-        label: '退出 My Cat Pet',
+        label: '退出 QiuQiu',
         click: options.quitApp,
       },
     ]);
 
-    tray.setToolTip(`My Cat Pet · ${currentState}`);
+    tray.setToolTip(`QiuQiu · ${currentState}`);
     tray.setContextMenu(contextMenu);
   };
 

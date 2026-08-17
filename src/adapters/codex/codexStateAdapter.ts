@@ -13,6 +13,7 @@ const PET_STATE_BY_CODEX_STATE: Record<CodexAutomaticState, PetState> = {
 export type CodexPetStateUpdate = {
   state: PetState;
   doneHoldMs: number;
+  afterDoneState: PetState;
 };
 
 function adaptCodexState(value: unknown): CodexPetStateUpdate | null {
@@ -25,13 +26,17 @@ function adaptCodexState(value: unknown): CodexPetStateUpdate | null {
     return {
       state: PET_STATE_BY_CODEX_STATE[snapshot.state],
       doneHoldMs: 0,
+      afterDoneState: PetState.IDLE,
     };
   }
 
   const remainingDoneTime = Math.max(0, DONE_HOLD_MS - (Date.now() - snapshot.updatedAt));
+  const afterDoneState =
+    snapshot.resumeState === 'WORKING' ? PetState.WORKING : PetState.IDLE;
   return {
-    state: remainingDoneTime > 0 ? PetState.DONE : PetState.IDLE,
+    state: remainingDoneTime > 0 ? PetState.DONE : afterDoneState,
     doneHoldMs: remainingDoneTime,
+    afterDoneState,
   };
 }
 

@@ -1,4 +1,5 @@
 export type CodexAutomaticState = 'IDLE' | 'WORKING' | 'WAITING' | 'DONE';
+export type CodexDoneResumeState = 'IDLE' | 'WORKING';
 
 export type CodexStateSnapshot = {
   source: 'codex';
@@ -6,6 +7,7 @@ export type CodexStateSnapshot = {
   sessionId: string;
   turnId?: string;
   updatedAt: number;
+  resumeState?: CodexDoneResumeState;
 };
 
 const CODEX_AUTOMATIC_STATES = new Set<CodexAutomaticState>([
@@ -41,11 +43,20 @@ export function parseCodexStateSnapshot(value: unknown): CodexStateSnapshot | nu
     return null;
   }
 
+  if (
+    snapshot.resumeState !== undefined &&
+    snapshot.resumeState !== 'IDLE' &&
+    snapshot.resumeState !== 'WORKING'
+  ) {
+    return null;
+  }
+
   return {
     source: 'codex',
     state: snapshot.state as CodexAutomaticState,
     sessionId: snapshot.sessionId,
     ...(snapshot.turnId ? { turnId: snapshot.turnId } : {}),
     updatedAt: Number(snapshot.updatedAt),
+    ...(snapshot.resumeState ? { resumeState: snapshot.resumeState as CodexDoneResumeState } : {}),
   };
 }

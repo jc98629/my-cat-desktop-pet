@@ -60,7 +60,12 @@ export function App() {
   );
 
   const applySourceState = useCallback(
-    (source: PetStateSource, nextState: PetState, doneHoldMs: number) => {
+    (
+      source: PetStateSource,
+      nextState: PetState,
+      doneHoldMs: number,
+      afterDoneState = PetState.IDLE,
+    ) => {
       window.clearTimeout(sourceResetTimers.current[source]);
       delete sourceResetTimers.current[source];
       applyAggregatedState(stateAggregator.update(source, nextState));
@@ -68,7 +73,7 @@ export function App() {
       if (nextState === PetState.DONE && doneHoldMs > 0) {
         sourceResetTimers.current[source] = window.setTimeout(() => {
           delete sourceResetTimers.current[source];
-          applyAggregatedState(stateAggregator.update(source, PetState.IDLE));
+          applyAggregatedState(stateAggregator.update(source, afterDoneState));
         }, doneHoldMs);
       }
     },
@@ -80,9 +85,11 @@ export function App() {
   }, [state]);
 
   useEffect(() => {
-    const unsubscribeCodex = subscribeToCodexPetState(({ state: nextState, doneHoldMs }) => {
-      applySourceState('codex', nextState, doneHoldMs);
-    });
+    const unsubscribeCodex = subscribeToCodexPetState(
+      ({ state: nextState, doneHoldMs, afterDoneState }) => {
+        applySourceState('codex', nextState, doneHoldMs, afterDoneState);
+      },
+    );
     const unsubscribeDeepSeek = subscribeToDeepSeekPetState(
       ({ state: nextState, doneHoldMs }) => {
         applySourceState('deepseek', nextState, doneHoldMs);

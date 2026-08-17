@@ -1,18 +1,19 @@
 'use strict';
 
 const fs = require('node:fs/promises');
+const { createHash } = require('node:crypto');
 const os = require('node:os');
 const path = require('node:path');
 
 const EVENT_STATE = Object.freeze({
   UserPromptSubmit: 'WORKING',
-  PermissionRequest: 'WAITING',
   PostToolUse: 'WORKING',
   Stop: 'DONE',
 });
 
 const STATE_DIR = path.join(os.homedir(), '.my-cat-pet');
 const STATE_FILE = path.join(STATE_DIR, 'codex-state.json');
+const SESSION_STATE_DIR = path.join(STATE_DIR, 'codex-sessions');
 const MAX_INPUT_BYTES = 8 * 1024 * 1024;
 
 async function readHookInput() {
@@ -36,9 +37,14 @@ function safeId(value) {
   return typeof value === 'string' && value.length > 0 && value.length <= 256 ? value : null;
 }
 
-async function readCurrentState() {
+function sessionStateFile(sessionId) {
+  const fileName = createHash('sha256').update(sessionId).digest('hex');
+  return path.join(SESSION_STATE_DIR, `${fileName}.json`);
+}
+
+async function readCurrentState(stateFile) {
   try {
-    return JSON.parse(await fs.readFile(STATE_FILE, 'utf8'));
+    return JSON.parse(await fs.readFile(stateFile, 'utf8'));
   } catch {
     return null;
   }
@@ -84,22 +90,36 @@ async function writeState(input) {
     turnId,
     updatedAt: Date.now(),
   };
-  const current = await readCurrentState();
+  const stateFile = sessionStateFile(sessionId);
+  const current = await readCurrentState(stateFile);
   if (isDuplicateOrLate(current, next, eventName)) {
     return;
   }
 
   await fs.mkdir(STATE_DIR, { recursive: true, mode: 0o700 });
-  const tempFile = path.join(STATE_DIR, `.codex-state.${process.pid}.tmp`);
+  await fs.mkdir(SESSION_STATE_DIR, { recursive: true, mode: 0o700 });
+
+  await writeSnapshot(stateFile, next);
+  // Keep the original file as a compatibility view for older builds and
+  // external diagnostics. The desktop pet aggregates codex-sessions instead.
+  await writeSnapshot(STATE_FILE, next).catch(() => undefined);
+}
+
+async function writeSnapshot(stateFile, snapshot) {
+  const tempFile = path.join(
+    path.dirname(stateFile),
+    `.${path.basename(stateFile)}.${process.pid}.tmp`,
+  );
 
   try {
-    await fs.writeFile(tempFile, `${JSON.stringify(next, null, 2)}\n`, {
+    await fs.writeFile(tempFile, `${JSON.stringify(snapshot, null, 2)}\n`, {
       encoding: 'utf8',
       mode: 0o600,
     });
-    await fs.rename(tempFile, STATE_FILE);
+    await fs.rename(tempFile, stateFile);
   } catch {
     await fs.unlink(tempFile).catch(() => undefined);
+    throw new Error('state-write-failed');
   }
 }
 

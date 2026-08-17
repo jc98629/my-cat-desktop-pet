@@ -1,6 +1,7 @@
 {
   "name": "my-cat-desktop-pet",
-  "version": "0.1.0",
+  "productName": "QiuQiu",
+  "version": "0.2.0",
   "private": true,
   "description": "A minimal macOS desktop cat pet built with Electron, React, TypeScript, and Vite.",
   "license": "MIT",
@@ -12,8 +13,10 @@
     "build": "npm run typecheck && npm run build:renderer && npm run build:electron",
     "build:renderer": "vite build",
     "build:electron": "tsc -p tsconfig.electron.json",
+    "test:codex-multi-session": "npm run build:electron && node scripts/codex-multi-session-test.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "start": "npm run build && electron ."
+    "start": "npm run build && electron .",
+    "build:mac-app": "npm run build && node scripts/build-macos-app.mjs"
   },
   "dependencies": {
     "react": "^19.1.1",
